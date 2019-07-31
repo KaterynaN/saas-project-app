@@ -64,17 +64,18 @@ $(document).ready(function () {
     //function to handle the submit of the form and intercept the default event
     submitHandler = function (event) {
         var $form = $(event.target);
-        $form.find("input[type=submit").prop("disabled", true);
-        if (Stripe) {
+        $form.find("input[type=submit]").prop("disabled", true);
+//If Stripe was initialized correctly this will create a token using the credit card info
+        if(Stripe){
             Stripe.card.createToken($form, stripeResponseHandler);
         } else {
-            show_error("Failed to load credit card processing functionality. Please, reload the page.")
+            show_error("Failed to load credit card processing functionality. Please reload this page in your browser.")
         }
         return false;
     };
 
     //initiate submit handler listener for any form with clacc cc_form
-    $('.cc_form').on('submit', submitHandler);
+    $(".cc_form").on('submit', submitHandler);
 
     //handle event of plan drop down changing
     var handlePlanChange = function (plan_type, form) {
@@ -90,7 +91,7 @@ $(document).ready(function () {
             $('[data-stripe]').show();
 
         } else {
-            $('[data-stripe]').hide;
+            $('[data-stripe]').hide();
             $form.off('submit');
             $('[data-stripe]').removeProp('required');
         }
@@ -112,7 +113,7 @@ $(document).ready(function () {
         if (response.error) {
             console.log(response.error.message);
             show_error(response.error.message);
-            $form.find('input[type=submit]').prop("disabled", false);
+            $form.find("input[type=submit]").prop("disabled", false);
         } else {
             token = response.id;
             $form.append($("<input type=\"hidden\" name=\"payment[token]\" />").val(token));
@@ -124,7 +125,7 @@ $(document).ready(function () {
             $form.get(0).submit();
         }
         return false;
-    }
+    };
 
     //function to show errors when Stripe functionality returns error
     show_error = function (message) {
